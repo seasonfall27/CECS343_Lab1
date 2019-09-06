@@ -20,6 +20,9 @@ int dir = 2;             //The next direction to take
 //Coordinates of the apple.  The snake gets longer each time it "eats" the apple.
 int applex = 12;
 int appley = 10;
+
+ArrayList<Integer> minex = new ArrayList <Integer>();
+ArrayList<Integer> miney = new ArrayList <Integer>();
 boolean gameover = false;      //flag to show whether game is done or not.
 int [] colors = {#266C1B, #E89E25, #2D3FDE, #C10A35, #EBF018};
 final int initialFrameRate = 10;
@@ -51,6 +54,12 @@ void draw () {
     rect(applex * bs, appley * bs, bs, bs);
   }    
   if (!gameover) {
+    //draw the mines
+    fill(255, 255, 0);
+    for (int i = 0; i < minex.size(); i++) {
+        rect(minex.get(i)*bs, miney.get(i)*bs, bs, bs);}
+  }    
+  if (!gameover) {
     if (frameCount % 5 == 0) {
       x.add(0, x.get(0) + dx[dir]);
       y.add(0, y.get(0) + dy[dir]);
@@ -63,10 +72,20 @@ void draw () {
         applex = (int) random(0, w);      //Reposition the apple
         appley = (int) random(0, h);      //Don't make the snake shorter
         frameRate(frameRate + frameRate / 10);
+        
+        //generates a mine in a random location once the apple is eaten
+        minex.add((int) random(0, w));
+        miney.add((int) random(0, h));    
       } else {                      //Trim off the last element in the snake
         x.remove(x.size() - 1);
         y.remove(y.size() - 1);
       }
+      //insert condition if snake hits a mine
+      for (int i = 0; i < minex.size(); i++) {
+            if (x.get(0) == minex.get(i) && y.get(0) == miney.get(i)) {
+                gameover = true;
+            }
+        }
     }
   } else if (gameover) {
     fill (0);
@@ -77,6 +96,8 @@ void draw () {
       frameRate(initialFrameRate);      //start over with the speed of the game
       x.clear();
       y.clear();
+      minex.clear();
+      miney.clear();
       x.add(5);
       y.add(5);
       gameover = false;

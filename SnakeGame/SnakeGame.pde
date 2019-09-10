@@ -21,6 +21,11 @@ int dir = 2;             //The next direction to take
 int applex = 12;
 int appley = 10;
 
+int randomx = 0;
+int randomy = 0;
+int randx = 0;
+int randy = 0;
+
 ArrayList<Integer> minex = new ArrayList <Integer>();
 ArrayList<Integer> miney = new ArrayList <Integer>();
 boolean gameover = false;      //flag to show whether game is done or not.
@@ -55,7 +60,7 @@ void draw () {
   }    
   if (!gameover) {
     //draw the mines
-    fill(255, 255, 0);
+    fill(0, 0, 0);
     for (int i = 0; i < minex.size(); i++) {
         rect(minex.get(i)*bs, miney.get(i)*bs, bs, bs);}
   }    
@@ -69,13 +74,31 @@ void draw () {
       }
       //See if we've hit the apple
       if(x.get(0) == applex && y.get(0) == appley) {
-        applex = (int) random(0, w);      //Reposition the apple
-        appley = (int) random(0, h);      //Don't make the snake shorter
+        randx = (int) random(0, w);      //Reposition the apple
+        randy = (int) random(0, h);      //Don't make the snake shorter
         frameRate(frameRate + frameRate / 10);
         
         //generates a mine in a random location once the apple is eaten
-        minex.add((int) random(0, w));
-        miney.add((int) random(0, h));    
+        randomx = (int) random(0, w);
+        randomy = (int) random(0, h);
+        while (randomx == randx && randomy == randy) {
+                randomx = (int) random(0, w);
+                randomy = (int) random(0, h);
+                randx = (int) random(0, w);
+                randy = (int) random(0, h);
+                println("Random mine was the same as apple");
+            }
+        for (int i = 0; i < minex.size(); i++) {
+            while (randomx != minex.get(i) && randomy != miney.get(i)) {
+                randomx = (int) random(0, w);
+                randomy = (int) random(0, h);
+                println("Random mine was the same as an old mine");
+            }
+        }
+        applex = randx;
+        appley = randy;
+        minex.add(randomx);
+        miney.add(randomy);    
       } else {                      //Trim off the last element in the snake
         x.remove(x.size() - 1);
         y.remove(y.size() - 1);

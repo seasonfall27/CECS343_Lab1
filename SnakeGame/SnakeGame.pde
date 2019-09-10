@@ -164,7 +164,7 @@ void deathSnakeCollisionDetection()
 {
   for (int t = 0; t < x.size(); ++t)
   {
-    if (deathx.get(0) == x.get(t) && deathy.get(0) == y.get(t))
+    if ((deathx.get(0) == x.get(t)) | (deathx.get(t) == x.get(0)) && ((deathy.get(0) == y.get(t)) | (deathy.get(t) == y.get(0))))
     {
       gameover = true;
     }

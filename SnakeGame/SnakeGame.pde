@@ -100,6 +100,7 @@ void draw () {
       
       //See if we've hit the apple
       if(x.get(0) == applex && y.get(0) == appley) {
+        //randx and randy pairs up with the apple location to generate a random number 
         randx = (int) random(0, w);      //Reposition the apple
         randy = (int) random(0, h);      //Don't make the snake shorter
         frameRate(frameRate + frameRate / 10);
@@ -107,20 +108,23 @@ void draw () {
         //generates a mine in a random location once the apple is eaten
         randomx = (int) random(0, w);
         randomy = (int) random(0, h);
-        while (randomx == randx && randomy == randy) {
+        // if the random numbers generated are the same as the apple location
+        if (randomx == randx && randomy == randy) {
                 randomx = (int) random(0, w);
                 randomy = (int) random(0, h);
                 randx = (int) random(0, w);
                 randy = (int) random(0, h);
                 println("Random mine was the same as apple");
             }
+        // if the random numbers generated are the same as a mine location
         for (int i = 0; i < minex.size(); i++) {
-            while (randomx == minex.get(i) && randomy == miney.get(i)) {
+            if (randomx == minex.get(i) && randomy == miney.get(i)) {
                 randomx = (int) random(0, w);
                 randomy = (int) random(0, h);
                 println("Random mine was the same as an old mine");
             }
         }
+        // add random location
         applex = randx;
         appley = randy;
         minex.add(randomx);
@@ -145,6 +149,7 @@ void draw () {
     text("GAME OVER. Press space bar to resume.", width/2, height/2);
     if(keyPressed && key == ' ') {      //user wants to resume
       frameRate(initialFrameRate);      //start over with the speed of the game
+      //clear lists to reset game
       x.clear();
       y.clear();
       minex.clear();

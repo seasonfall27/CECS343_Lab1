@@ -86,8 +86,15 @@ void draw () {
         gameover = true;
       }
       
-      deathSnakeBorderDetection();
-      deathSnakeCollisionDetection();
+      //deathSnakeBorderDetection();
+      //deathSnakeCollisionDetection();
+      
+      //See if we've ran into ourself
+      for(int i = 0; i < x.size(); i++) {
+        if(x.get(0) == x.get(i) && y.get(0) == y.get(i)) {
+          gameover = true;
+        }
+      }
       
       //See if we've hit the apple
       if(x.get(0) == applex && y.get(0) == appley) {
@@ -106,7 +113,7 @@ void draw () {
                 println("Random mine was the same as apple");
             }
         for (int i = 0; i < minex.size(); i++) {
-            while (randomx != minex.get(i) && randomy != miney.get(i)) {
+            while (randomx == minex.get(i) && randomy == miney.get(i)) {
                 randomx = (int) random(0, w);
                 randomy = (int) random(0, h);
                 println("Random mine was the same as an old mine");
@@ -142,6 +149,8 @@ void draw () {
       miney.clear();
       x.add(5);
       y.add(5);
+      deathx.clear();
+      deathy.clear();
       deathx.add(15);
       deathy.add(28);
       gameover = false;

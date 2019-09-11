@@ -202,7 +202,7 @@ void changeDeathSnakeDirection(int flip)
   }
   else
   {
-    if      (death_dir == 0){ new_death_dir = 1; }
+    if      (death_dir == 0){ new_death_dir = 1; } //This block reverses direction of death snake
     else if (death_dir == 1){ new_death_dir = 0; }
     else if (death_dir == 2){ new_death_dir = 3; }
     else if (death_dir == 3){ new_death_dir = 2; }
@@ -234,15 +234,15 @@ void deathSnakeBorderDetection()
 
 void deathSnakeAppleDetection()
 {
-  if(deathx.get(0) == applex && ((deathy.get(0) == appley - 1) || (deathy.get(0) == appley + 1)))
+  if(deathx.get(0) == applex && ((deathy.get(0) == appley - 1) || (deathy.get(0) == appley + 1)))//If runs into apple on the same x axis but 1 below or above y axis, flip direction
   {
     changeDeathSnakeDirection(1);
   }
-  else if(deathy.get(0) == appley && ((deathx.get(0) == applex - 1) || (deathx.get(0) == applex + 1)))
+  else if(deathy.get(0) == appley && ((deathx.get(0) == applex - 1) || (deathx.get(0) == applex + 1))) //If runs into apple on the same y axis but 1 below or above x axis, flip direction
   {
     changeDeathSnakeDirection(1);
   }
-  else if((deathy.get(0) == appley + 1 || deathy.get(0) == appley - 1)  && ((deathx.get(0) == applex + 1) || (deathx.get(0) == applex - 1)))
+  else if((deathy.get(0) == appley + 1 || deathy.get(0) == appley - 1)  && ((deathx.get(0) == applex + 1) || (deathx.get(0) == applex - 1)))//If runs into corner of mine, flip direction
   {
     changeDeathSnakeDirection(1);
   }
@@ -252,22 +252,22 @@ void deathSnakeMineDetection()
 {
   for (int i = 0; i < minex.size(); i++)
   {
-    if(deathx.get(0) == minex.get(i) && ((deathy.get(0) == miney.get(i) - 1) || (deathy.get(0) == miney.get(i) + 1)))
+    if(deathx.get(0) == minex.get(i) && ((deathy.get(0) == miney.get(i) - 1) || (deathy.get(0) == miney.get(i) + 1))) //If runs into mine on the same x axis but 1 below or above y axis, flip direction
     {
       changeDeathSnakeDirection(1);
     }
-    else if(deathy.get(0) == miney.get(i) && ((deathx.get(0) == minex.get(i) - 1) || (deathx.get(0) == minex.get(i) + 1)))
+    else if(deathy.get(0) == miney.get(i) && ((deathx.get(0) == minex.get(i) - 1) || (deathx.get(0) == minex.get(i) + 1))) //If runs into mine on the same y axis but 1 above or below x axis, flip direction
     {
       changeDeathSnakeDirection(1);
     }
-    else if((deathy.get(0) == miney.get(i) + 1 || deathy.get(0) == miney.get(i) - 1)  && ((deathx.get(0) == minex.get(i) + 1) || (deathx.get(0) == minex.get(i) - 1)))
+    else if((deathy.get(0) == miney.get(i) + 1 || deathy.get(0) == miney.get(i) - 1)  && ((deathx.get(0) == minex.get(i) + 1) || (deathx.get(0) == minex.get(i) - 1))) // If runs into corner, flip direction
     {
       changeDeathSnakeDirection(1);
     }
   }
 }
 
-void deathSnakeCollisionDetection()
+void deathSnakeCollisionDetection() //Function to see if Death snake runs into Regular Snake
 {
   for (int t = 0; t < x.size(); ++t)
   {
@@ -278,7 +278,7 @@ void deathSnakeCollisionDetection()
   }
 }
 
-void snakeCollisionDetection()
+void snakeCollisionDetection() //Function to see if Regular snake runs into Death Snake
 {
   for (int r = 0; r < x.size(); ++r)
   {

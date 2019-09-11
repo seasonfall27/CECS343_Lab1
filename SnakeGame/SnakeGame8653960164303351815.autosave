@@ -23,14 +23,6 @@ int death_dir = 1;       //The next direction to take for the death snake
 //Coordinates of the apple.  The snake gets longer each time it "eats" the apple.
 int applex = 12;
 int appley = 10;
-
-int randomx = 0;
-int randomy = 0;
-int randx = 0;
-int randy = 0;
-
-ArrayList<Integer> minex = new ArrayList <Integer>();
-ArrayList<Integer> miney = new ArrayList <Integer>();
 boolean gameover = false;      //flag to show whether game is done or not.
 int [] colors = {#266C1B, #E89E25, #2D3FDE, #C10A35, #EBF018};
 final int initialFrameRate = 30;
@@ -40,7 +32,7 @@ void setup () {
   size (600, 600);            //size will only take literals, not variables
   x.add(5);              //Just a random starting position for the snake
   y.add(5);
-  deathx.add(12);              //Just a random starting position for the death snake
+  deathx.add(13);              //Just a random starting position for the death snake
   deathy.add(28);
   frameRate (initialFrameRate);              //start slow to make the game easier.
 }
@@ -69,12 +61,6 @@ void draw () {
     rect(applex * bs, appley * bs, bs, bs);
   }    
   if (!gameover) {
-    //draw the mines
-    fill(0, 0, 0);
-    for (int i = 0; i < minex.size(); i++) {
-        rect(minex.get(i)*bs, miney.get(i)*bs, bs, bs);}
-  }    
-  if (!gameover) {
     if (frameCount % 5 == 0) {
       x.add(0, x.get(0) + dx[dir]);
       y.add(0, y.get(0) + dy[dir]);
@@ -85,59 +71,23 @@ void draw () {
       {
         gameover = true;
       }
-
+      
       deathSnakeBorderDetection();
       deathSnakeCollisionDetection();
       snakeCollisionDetection();
       deathSnakeAppleDetection();
-      deathSnakeMineDetection();
-      
-      //See if we've ran into ourself
-      for(int i = 1; i < x.size(); i++) {
-        if(x.get(0) == x.get(i) && y.get(0) == y.get(i)) {
-          gameover = true;
-        }
-      }
       
       //See if we've hit the apple
       if(x.get(0) == applex && y.get(0) == appley) {
-        randx = (int) random(0, w);      //Reposition the apple
-        randy = (int) random(0, h);      //Don't make the snake shorter
+        applex = (int) random(0, w);      //Reposition the apple
+        appley = (int) random(0, h);      //Don't make the snake shorter
         frameRate(frameRate + frameRate / 10);
-        
-        //generates a mine in a random location once the apple is eaten
-        randomx = (int) random(0, w);
-        randomy = (int) random(0, h);
-        while (randomx == randx && randomy == randy) {
-                randomx = (int) random(0, w);
-                randomy = (int) random(0, h);
-                randx = (int) random(0, w);
-                randy = (int) random(0, h);
-                println("Random mine was the same as apple");
-            }
-        for (int i = 0; i < minex.size(); i++) {
-            while (randomx == minex.get(i) && randomy == miney.get(i)) {
-                randomx = (int) random(0, w);
-                randomy = (int) random(0, h);
-                println("Random mine was the same as an old mine");
-            }
-        }
-        applex = randx;
-        appley = randy;
-        minex.add(randomx);
-        miney.add(randomy);    
       } else {                      //Trim off the last element in the snake
         x.remove(x.size() - 1);
         y.remove(y.size() - 1);
         deathx.remove(deathx.size() - 1);
         deathy.remove(deathy.size() - 1);
       }
-      //insert condition if snake hits a mine
-      for (int i = 0; i < minex.size(); i++) {
-            if (x.get(0) == minex.get(i) && y.get(0) == miney.get(i)) {
-                gameover = true;
-            }
-        }
     }
   } else if (gameover) {
     fill (0);
@@ -148,12 +98,10 @@ void draw () {
       frameRate(initialFrameRate);      //start over with the speed of the game
       x.clear();
       y.clear();
-      minex.clear();
-      miney.clear();
-      x.add(5);
-      y.add(5);
       deathx.clear();
       deathy.clear();
+      x.add(5);
+      y.add(5);
       deathx.add(15);
       deathy.add(28);
       gameover = false;
@@ -197,7 +145,7 @@ void changeDeathSnakeDirection(int flip)
   }
   else
   {
-    if      (death_dir == 0){ new_death_dir = 1; }
+    if (death_dir == 0){new_death_dir = 1; }
     else if (death_dir == 1){ new_death_dir = 0; }
     else if (death_dir == 2){ new_death_dir = 3; }
     else if (death_dir == 3){ new_death_dir = 2; }
@@ -237,31 +185,18 @@ void deathSnakeAppleDetection()
   {
     changeDeathSnakeDirection(1);
   }
+  
   else if((deathy.get(0) == appley + 1 || deathy.get(0) == appley - 1)  && ((deathx.get(0) == applex + 1) || (deathx.get(0) == applex - 1)))
   {
     changeDeathSnakeDirection(1);
   }
   
 }
-void deathSnakeMineDetection()
-{
-  for (int i = 0; i < minex.size(); i++)
-  {
-    if(deathx.get(0) == minex.get(i) && ((deathy.get(0) == miney.get(i) - 1) || (deathy.get(0) == miney.get(i) + 1)))
-    {
-      changeDeathSnakeDirection(1);
-    }
-    else if(deathy.get(0) == miney.get(i) && ((deathx.get(0) == minex.get(i) - 1) || (deathx.get(0) == minex.get(i) + 1)))
-    {
-      changeDeathSnakeDirection(1);
-    }
-    else if((deathy.get(0) == miney.get(i) + 1 || deathy.get(0) == miney.get(i) - 1)  && ((deathx.get(0) == minex.get(i) + 1) || (deathx.get(0) == minex.get(i) - 1)))
-    {
-      changeDeathSnakeDirection(1);
-    }
-  }
-}
 
+
+  
+  
+}
 void deathSnakeCollisionDetection()
 {
   for (int t = 0; t < x.size(); ++t)

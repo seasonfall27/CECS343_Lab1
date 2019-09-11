@@ -32,7 +32,7 @@ void setup () {
   size (600, 600);            //size will only take literals, not variables
   x.add(5);              //Just a random starting position for the snake
   y.add(5);
-  deathx.add(15);              //Just a random starting position for the death snake
+  deathx.add(12);              //Just a random starting position for the death snake
   deathy.add(28);
   frameRate (initialFrameRate);              //start slow to make the game easier.
 }
@@ -74,6 +74,8 @@ void draw () {
       
       deathSnakeBorderDetection();
       deathSnakeCollisionDetection();
+      snakeCollisionDetection();
+      deathSnakeAppleDetection();
       
       //See if we've hit the apple
       if(x.get(0) == applex && y.get(0) == appley) {
@@ -122,49 +124,79 @@ void keyPressed ()
   if (newdir != -1)
   {
     dir = newdir;
-    deathSnakeDirection();
+    changeDeathSnakeDirection(0);
   }
 }
 
-void deathSnakeDirection()
+void changeDeathSnakeDirection(int flip)
 {
   int new_death_dir = int(random(4)); //Generate a random int to determine new direction
-  if (new_death_dir == death_dir)     //If the new direction is the same as the old, change it
+  if (flip == 0) 
   {
-    new_death_dir = new_death_dir + 1;
-    if (new_death_dir >= 4)
+    
+    if (new_death_dir == death_dir)     //If the new direction is the same as the old, change it
     {
-      new_death_dir = 0;
+      new_death_dir = new_death_dir + 1;
+      if (new_death_dir >= 4)
+      {
+        new_death_dir = 0;
+      }
     }
   }
-  death_dir = new_death_dir; //Update the direction of the death snake
+  //else
+  //{
+  //  if (death_dir == 0){new_death_dir = 1; }
+   // else if (death_dir == 1){ new_death_dir = 0; }
+   // else if (death_dir == 2){ new_death_dir = 3; }
+   // else if (death_dir == 3){ new_death_dir = 2; }
+ // }
+  
+    death_dir = new_death_dir; //Update the direction of the death snake
+  
 }
 
 void deathSnakeBorderDetection()
 {
-  if (deathx.get(0) - 1 < 0) // If run into left border, go down
+  if (deathx.get(0) - 1 < 0) // If run into left border, go right
       {
         death_dir = 2;
       }
-  else if(deathy.get(0) - 1 < 0)
+  else if(deathy.get(0) - 1 < 0) // If run into top border, go down
       {
         death_dir = 0;
       }
-  else if (deathx.get(0) + 1 >= w)
+  else if (deathx.get(0) + 1 >= w) // If run into right border, go left
       {
         death_dir = 3;
       } 
-  else if (deathy.get(0) + 1 >= h)
+  else if (deathy.get(0) + 1 >= h) // If run into bottom border, go up
       {
         death_dir = 1;
       }
+}
+
+void deathSnakeAppleDetection()
+{
+  if(deathx.get(0) == applex && ((deathy.get(0) == appley - 1) || (deathy.get(0) == appley + 1)))
+  {
+    changeDeathSnakeDirection(1);
+  }
+  else if(deathy.get(0) == appley && ((deathx.get(0) == applex - 1) || (deathx.get(0) == applex + 1)))
+  {
+    changeDeathSnakeDirection(1);
+  }
+  //else if((deathy.get(0) == appley + 1 || deathy.get(0) == appley - 1)  && ((deathx.get(0) == applex + 1) || (deathx.get(0) == applex - 1)))
+  //{
+  //  changeDeathSnakeDirection();
+  //}
+  
 }
 
 void deathSnakeCollisionDetection()
 {
   for (int t = 0; t < x.size(); ++t)
   {
-    if ((deathx.get(0) == x.get(t)) | (deathx.get(t) == x.get(0)) && ((deathy.get(0) == y.get(t)) | (deathy.get(t) == y.get(0))))
+    if ((deathx.get(0) == x.get(t)) && (deathy.get(0) == y.get(t)))
     {
       gameover = true;
     }
@@ -175,7 +207,7 @@ void snakeCollisionDetection()
 {
   for (int r = 0; r < x.size(); ++r)
   {
-    if (x.get(0) == deathx.get(r) && y.get(0) == deathy.get(r))
+    if ((x.get(0) == deathx.get(r)) && (y.get(0) == deathy.get(r)))
     {
       gameover = true;
     }
